@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import "./Navbar.css"
 import logo from "../../assets/logo.webp"
 import cart_icon from "../../assets/cart_icon.png"
 import { Link } from 'react-router-dom'
-import { useContext } from 'react'
 import { ShopContext } from '../../Context/ShopContext'
 const Navbar = () => {
     const [menu,setMenu]=useState("home")
@@ -12,7 +11,7 @@ const Navbar = () => {
     <div className='navbar'>
         <div className="nav-logo">
             <img src={logo} alt="" height="50px" />
-            <p>Shopify</p>
+            <p>E-Shop</p>
         </div>
         <ul className='nav-menu'>
             <li onClick={()=>{setMenu("home")}}><Link style={{textDecoration:"none",color:"#626262"}} to="/">Home</Link>{menu==="home" ? <hr/>:<></>}</li>
