@@ -1,49 +1,60 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useState } from 'react'
+import React, {createContext, useState} from "react";
+import all_product from "../assets/all_product";
 
-export const ShopContext = createContext(null)
-
-const getDefaultCart = () => {
-  return {}
+export const ShopContext = createContext(null);
+const getDefaultCart = () =>{
+    let cart = {};
+    for(let index=0;index < all_product.length+1;index++){
+       cart[index] = 0
+    } return cart;
 }
 
-export const ShopContextProvider = (props) => {
-  const [cartItems, setCartItems] = useState(getDefaultCart())
+const ShopContextProvider = (props) =>{
+    const [cartItems,setCartItems] = useState(getDefaultCart())
+    
 
-  const getTotalCartItems = () => {
-    let totalItems = 0
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        totalItems += cartItems[item]
-      }
+    const addTocart = (itemId) =>{
+        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}));
+        console.log(cartItems);
+        
+        
     }
-    return totalItems
-  }
+  
+        const removeFromCart = (itemId) =>{
+            setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1})
+            )
+        }
+  
+        const getTotalCartAmount = () =>{
+            let totalAmount = 0;
+            for(const item in cartItems)
+            {
+                if(cartItems[item]>0){
+                    let itemInfo  = all_product.find((product)=>product.id === Number(item))
+                    totalAmount += itemInfo.new_price* cartItems[item];
+                }
+              
+            }
+            return totalAmount;
+        }
 
-  const addToCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }))
-  }
-
-  const removeFromCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: Math.max((prev[itemId] || 0) - 1, 0) }))
-  }
-
-  const updateCartItemCount = (newAmount, itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: Math.max(newAmount, 0) }))
-  }
-
-  const contextValue = {
-    cartItems,
-    addToCart,
-    removeFromCart,
-    updateCartItemCount,
-    getTotalCartItems
-  }
-
-  return (
-    <ShopContext.Provider value={contextValue}>
-      {props.children}
-    </ShopContext.Provider>
-  )
+        const getTotalCartItems = () =>{
+            let totalItmes = 0;
+            for(const item in cartItems)
+            {
+                if(cartItems[item]>0){
+                    totalItmes += cartItems[item];
+                }
+              
+            }
+            return totalItmes;
+        }
+        const contextValue={getTotalCartItems,getTotalCartAmount,all_product,cartItems,addTocart,removeFromCart};
+    return (
+        <ShopContext.Provider value={contextValue}>
+{props.children}
+        </ShopContext.Provider>
+    )
 }
 
+export default ShopContextProvider;
